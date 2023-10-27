@@ -105,7 +105,6 @@ namespace QuizApi.Controllers
             return BadRequest();
         }
 
-   
         [HttpGet("Get/{id}")]
         public IActionResult GetQuiz(int id)
         {
@@ -121,17 +120,15 @@ namespace QuizApi.Controllers
                     if (quiz != null)
                     {
                         // Retrieve questions for the quiz
-                        string selectQuestionsSql = "SELECT QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation FROM dbo.Questions WHERE QuizId = @QuizId";
+                        string selectQuestionsSql = "SELECT Id, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation FROM dbo.Questions WHERE QuizId = @QuizId";
                         var questions = connection.Query<QuestionDto>(selectQuestionsSql, new { QuizId = id }).ToList();
 
                         foreach (var question in questions)
                         {
                             // Retrieve choices for each question
-                            string selectChoicesSql = "SELECT ChoiceText FROM dbo.Choices WHERE QuestionId IN (SELECT Id FROM dbo.Questions WHERE QuestionText = @QuestionText)";
-                            var choiceTexts = connection.Query<string>(selectChoicesSql, new { QuestionText = question.QuestionText }).ToList();
-                            var choices = choiceTexts.Select(choiceText => new ChoiceDto { ChoiceText = choiceText }).ToList();
-
-                            question.Choices = choices;
+                            string selectChoicesSql = "SELECT ChoiceText FROM dbo.Choices WHERE QuestionId = @QuestionId";
+                            question.Choices = connection.Query<ChoiceDto>(selectChoicesSql, new { QuestionId = question.Choices }).ToList();
+                
                         }
 
                         quiz.Questions = questions;
@@ -146,7 +143,6 @@ namespace QuizApi.Controllers
 
             return NotFound();
         }
-
 
 
     }
