@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[Quizzes]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [QuizName] NVARCHAR(MAX) NOT NULL
+)
