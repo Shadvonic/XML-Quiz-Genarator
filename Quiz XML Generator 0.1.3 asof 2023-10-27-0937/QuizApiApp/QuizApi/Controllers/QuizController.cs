@@ -20,6 +20,31 @@ namespace QuizApi.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult GetQuizzes()
+        {
+            List<Quiz> quizzes = new List<Quiz>();
+
+            try
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string sql = "SELECT * FROM dbo.Quizzes";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("We have an exception \n" + ex.Message);
+                return BadRequest();
+            }
+
+            return Ok(quizzes);
+
+        }
+
+
         [HttpPost("Save")]
         public IActionResult SaveQuizToSql(Quiz quizDto)
         {
