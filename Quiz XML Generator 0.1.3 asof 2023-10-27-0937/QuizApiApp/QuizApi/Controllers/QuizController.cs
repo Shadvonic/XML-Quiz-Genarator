@@ -44,8 +44,6 @@ namespace QuizApi.Controllers
 
                     if (newQuizId > 0)
                     {
-                        var questions = new List<Question>();
-
                         // Iterate through the questions in the quiz and insert them
                         foreach (var questionDto in quizDto.Questions)
                         {
@@ -58,39 +56,36 @@ namespace QuizApi.Controllers
                                 IncorrectExplanation = questionDto.IncorrectExplanation
                             };
 
-                            questions.Add(question);
-                        }
+                            string insertQuestionSql = "INSERT INTO dbo.Questions (QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation) " +
+                                "OUTPUT INSERTED.Id " +
+                                "VALUES (@QuizId, @QuestionText, @CorrectChoiceIndex, @CorrectExplanation, @IncorrectExplanation)";
 
-                        string insertQuestionSql = "INSERT INTO dbo.Questions (QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation) " +
-                            "VALUES (@QuizId, @QuestionText, @CorrectChoiceIndex, @CorrectExplanation, @IncorrectExplanation)";
+                            int newQuestionId = connection.ExecuteScalar<int>(insertQuestionSql, question);
 
-                        connection.Execute(insertQuestionSql, questions);
-
-                        // Iterate through the choices in the questions and insert them
-                        foreach (var questionDto in quizDto.Questions)
-                        {
-                            var question = questions.FirstOrDefault(q => q.QuestionText == questionDto.QuestionText);
-
-                            if (question != null)
+                            if (newQuestionId > 0)
                             {
-                                var choices = questionDto.Choices.Select(choiceDto => new Choice
+                                // Iterate through the choices in the question and insert them
+                                foreach (var choiceDto in questionDto.Choices)
                                 {
-                                    QuestionId = question.Id,
-                                    ChoiceText = choiceDto.ChoiceText
-                                }).ToList();
+                                    var choice = new Choice
+                                    {
+                                        QuestionId = newQuestionId,
+                                        ChoiceText = choiceDto.ChoiceText
+                                    };
 
-                                string insertChoiceSql = "INSERT INTO dbo.Choices (QuestionId, ChoiceText) " +
-                                    "VALUES (@QuestionId, @ChoiceText)";
+                                    string insertChoiceSql = "INSERT INTO dbo.Choices (QuestionId, ChoiceText) " +
+                                        "VALUES (@QuestionId, @ChoiceText)";
 
-                                connection.Execute(insertChoiceSql, choices);
+                                    connection.Execute(insertChoiceSql, choice);
+                                }
                             }
                         }
 
                         // Retrieve the newly created quiz without the IDs
-                        var newQuiz = new Quiz
+                        var newQuiz = new QuizDto
                         {
                             QuizName = quizDto.QuizName,
-                            Questions = questions
+                            Questions = quizDto.Questions
                         };
 
                         return Ok(newQuiz);
@@ -104,6 +99,7 @@ namespace QuizApi.Controllers
 
             return BadRequest();
         }
+
 
         [HttpGet("Load/{id}")]
         public IActionResult LoadQuizFromSql(int id)
