@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Quiz XML Generator</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Quiz XML Generator</h1>
+
+  <div id="quizContainer"></div>
+
+  <div id="questionInputContainer">
+    <label for="numChoices">Enter the number of choices for the question:</label>
+    <input type="number" id="numChoices" min="2" max="4">
+    <button id="addQuestionButton">Add Question</button>
+  </div>
+  <br>
+
+  <div id="questionCountLabel">Number of Questions: 0</div>
+  
+  <div id="scoreAndPassingContainer">
+          <div id="scoreContainer">
+            <label for="score">Enter passing score:</label>
+            <input type="number" id="score" min="0" max="100" value="0" oninput="previewXmlData()">
+
+      
+            <div id="passingQuestionsContainer">
+              <label for="passingQuestions">Number of questions needed to pass:</label>
+              <input type="number" id="passingQuestions" min="0" value="0">
+            </div>
+          </div>
+    </div>
+ 
+  
+
+  <button id="previewButton">Preview XML</button>
+  <button id="saveButton" disabled>Save Quiz as XML</button>
+  <button id="copyButton" disabled>Copy XML to Clipboard</button>
+  <button id="loadButton">Load Quiz</button>
+
+  <div>
+    <textarea id="xmlTextArea" rows="30" cols="90" readonly></textarea>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

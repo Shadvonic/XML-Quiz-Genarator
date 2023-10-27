@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizApi", "QuizApi\QuizApi.csproj", "{D9D49F0C-C219-4A6B-B43B-E4B8E10FD122}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "QuizDB", "QuizDB\QuizDB.sqlproj", "{152A385C-6409-465A-88D8-9C6F9710B32F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9D49F0C-C219-4A6B-B43B-E4B8E10FD122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9D49F0C-C219-4A6B-B43B-E4B8E10FD122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9D49F0C-C219-4A6B-B43B-E4B8E10FD122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9D49F0C-C219-4A6B-B43B-E4B8E10FD122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{152A385C-6409-465A-88D8-9C6F9710B32F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{152A385C-6409-465A-88D8-9C6F9710B32F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{152A385C-6409-465A-88D8-9C6F9710B32F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{152A385C-6409-465A-88D8-9C6F9710B32F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{152A385C-6409-465A-88D8-9C6F9710B32F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{152A385C-6409-465A-88D8-9C6F9710B32F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73721F1A-D5B1-4DA6-A3F4-1CB7B63A678E}
+	EndGlobalSection
+EndGlobal
