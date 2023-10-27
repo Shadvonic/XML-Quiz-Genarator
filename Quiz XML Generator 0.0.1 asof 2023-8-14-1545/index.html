@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz XML Generator</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <h1>Quiz XML Generator</h1>
+  <div id="questionCountLabel">Number of Questions: 0</div>
+  <label for="numChoices">Enter the number of choices for the question:</label>
+  <input type="number" id="numChoices" min="2">
+  <button id="addQuestionButton">Add Question</button>
+  <div id="quizContainer"></div>
+  <button id="saveButton" disabled>Save Quiz/ Save as XML</button>
+  <button id="copyButton" disabled>Copy XML to Clipboard</button>
+  <button id="loadButton">Load Quiz</button>
+  
+  <div>
+    <textarea id="xmlTextArea" rows="20" cols="80" readonly></textarea>
+  </div>
+  
+
+
+  <script src="script.js"></script>
+</body>
+</html>
