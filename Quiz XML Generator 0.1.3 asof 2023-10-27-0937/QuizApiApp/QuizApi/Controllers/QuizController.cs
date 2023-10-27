@@ -105,8 +105,8 @@ namespace QuizApi.Controllers
             return BadRequest();
         }
 
-        [HttpGet("Get/{id}")]
-        public IActionResult GetQuiz(int id)
+        [HttpGet("Load/{id}")]
+        public IActionResult LoadQuizFromSql(int id)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace QuizApi.Controllers
                         {
                             // Retrieve choices for each question
                             string selectChoicesSql = "SELECT ChoiceText FROM dbo.Choices WHERE QuestionId = @QuestionId";
-                            question.Choices = connection.Query<ChoiceDto>(selectChoicesSql, new { QuestionId = question.Choices }).ToList();
+                            question.Choices = connection.Query<ChoiceDto>(selectChoicesSql, new { QuestionId = question.Choices}).ToList();
                 
                         }
 
