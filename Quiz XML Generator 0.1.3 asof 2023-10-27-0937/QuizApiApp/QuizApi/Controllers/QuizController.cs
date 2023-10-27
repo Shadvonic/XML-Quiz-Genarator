@@ -111,20 +111,19 @@ namespace QuizApi.Controllers
                     connection.Open();
 
                     string selectQuizSql = "SELECT QuizName FROM dbo.Quizzes WHERE Id = @Id";
-                    var quiz = connection.QuerySingleOrDefault<QuizDto>(selectQuizSql, new { Id = id });
+                    var quiz = connection.QuerySingleOrDefault<Quiz>(selectQuizSql, new { Id = id });
 
                     if (quiz != null)
                     {
                         // Retrieve questions for the quiz
                         string selectQuestionsSql = "SELECT Id, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation FROM dbo.Questions WHERE QuizId = @QuizId";
-                        var questions = connection.Query<QuestionDto>(selectQuestionsSql, new { QuizId = id }).ToList();
+                        var questions = connection.Query<Question>(selectQuestionsSql, new { QuizId = id }).ToList();
 
                         foreach (var question in questions)
                         {
                             // Retrieve choices for each question
                             string selectChoicesSql = "SELECT ChoiceText FROM dbo.Choices WHERE QuestionId = @QuestionId";
-                            question.Choices = connection.Query<ChoiceDto>(selectChoicesSql, new { QuestionId = question.Choices}).ToList();
-                
+                            question.Choices = connection.Query<Choice>(selectChoicesSql, new { QuestionId = question.Id }).ToList();
                         }
 
                         quiz.Questions = questions;
@@ -139,7 +138,6 @@ namespace QuizApi.Controllers
 
             return NotFound();
         }
-
 
     }
 
