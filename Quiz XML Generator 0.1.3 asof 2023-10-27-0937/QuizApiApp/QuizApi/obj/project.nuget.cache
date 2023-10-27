@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JGDFXEVICO+SnUDnlfJCJ/Hgp9V7GdKdejyz36ER0q7BDBkUtYXR90mGc2WdnyQoQY05Q6s0/c68jsSfBJPJ7w==",
+  "dgSpecHash": "XTxVl0IjaQsqvFrykMgUXDyIhipoDDCf7H+aa5fauYyJz6qefp9pr5XgiTJHQnRr6Vrmu2+KPbjWOh11tzW9LQ==",
   "success": true,
-  "projectFilePath": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.3 asof 2023-10-24-0842\\QuizApiApp\\QuizApi\\QuizApi.csproj",
+  "projectFilePath": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\QuizApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\moxiem\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\moxiem\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

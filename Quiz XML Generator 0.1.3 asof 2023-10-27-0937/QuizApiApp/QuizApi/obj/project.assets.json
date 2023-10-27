@@ -2322,11 +2322,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.3 asof 2023-10-24-0842\\QuizApiApp\\QuizApi\\QuizApi.csproj",
+      "projectUniqueName": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\QuizApi.csproj",
       "projectName": "QuizApi",
-      "projectPath": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.3 asof 2023-10-24-0842\\QuizApiApp\\QuizApi\\QuizApi.csproj",
+      "projectPath": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\QuizApi.csproj",
       "packagesPath": "C:\\Users\\moxiem\\.nuget\\packages\\",
-      "outputPath": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.3 asof 2023-10-24-0842\\QuizApiApp\\QuizApi\\obj\\",
+      "outputPath": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
