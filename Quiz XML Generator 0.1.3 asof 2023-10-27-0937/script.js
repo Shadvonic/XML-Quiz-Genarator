@@ -746,25 +746,20 @@ function convertToXML(data, passingQuestions, score) {
 
 //  saving quiz data
 function saveQuizToSqlServer(quizData) {
-  fetch('/api/quiz/Save', {
+  fetch('https://localhost:7120/api/Quiz/Save', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(quizData),
   })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Quiz saved with ID: ' + data);
-    })
-    .catch((error) => {
-      console.error('Error saving quiz: ' + error);
-    });
+    .then(data => data.json())
+    .then(response => console.log(response))
 }
 
 // loading quiz data
 function loadQuizFromSqlServer(quizId) {
-  fetch(`/api/quiz/Load/${quizId}`)
+  fetch(`https://localhost:7120/api/Quiz/Load/${quizId}`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -777,9 +772,7 @@ function loadQuizFromSqlServer(quizId) {
       // Populate  quiz interface with the retrieved data here
       populateQuizInterface(quizData);
     })
-    .catch((error) => {
-      console.error('Error loading quiz: ' + error);
-    });
+    .then(response => console.log(response))
 }
 
 
