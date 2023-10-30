@@ -2,7 +2,7 @@
 let numQuestions = 0;
 let quizData = [];
 const regex = /^[\w\s.,?!-]*$/;
-//com=fsdhh
+
 //  code to initialize IndexedDB
 let db;
 const request = indexedDB.open("QuizDB", 1);
