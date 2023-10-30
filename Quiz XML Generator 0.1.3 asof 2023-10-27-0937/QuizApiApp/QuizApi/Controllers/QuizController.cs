@@ -22,9 +22,9 @@ namespace QuizApi.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("save")]
 
-        public IActionResult SaveQuiz([FromBody] List<Quiz> quizData)
+        public async Task<IActionResult> SaveQuiz([FromBody] List<Quiz> quizData)
 
         {
 
@@ -39,24 +39,29 @@ namespace QuizApi.Controllers
                     foreach (var data in quizData)
 
                     {
+                        string query = "INSERT INTO Quizzes (QuizName) VALUES (@QuizName); SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
-                        var result = db.Execute("INSERT INTO Quizzes (QuizName) VALUES (@QuizName)", new { data.QuizName });
+                        int quizId = await Task.Run(() => db.QuerySingle<int>(query, new { data.QuizName }));
 
-                        int quizId = db.QuerySingle<int>("SELECT CAST(SCOPE_IDENTITY() AS INT)");
+
+
+
 
                         foreach (var question in data.Questions)
 
                         {
 
-                            var questionId = db.QuerySingle<int>("INSERT INTO Questions (QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation) VALUES (@QuizId, @QuestionText, @CorrectChoiceIndex, @CorrectExplanation, @IncorrectExplanation); SELECT CAST(SCOPE_IDENTITY() AS INT)",
+                            var questionId = await Task.Run(() => db.QuerySingle<int>("INSERT INTO Questions (QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation) VALUES (@QuizId, @QuestionText, @CorrectChoiceIndex, @CorrectExplanation, @IncorrectExplanation); SELECT CAST(SCOPE_IDENTITY() AS INT)",
 
-                                new { QuizId = quizId, QuestionText = question.QuestionText, CorrectChoiceIndex = question.CorrectChoiceIndex, CorrectExplanation = question.CorrectExplanation, IncorrectExplanation = question.IncorrectExplanation });
+                                new { QuizId = quizId, QuestionText = question.QuestionText, CorrectChoiceIndex = question.CorrectChoiceIndex, CorrectExplanation = question.CorrectExplanation, IncorrectExplanation = question.IncorrectExplanation }));
+
+
 
                             foreach (var choice in question.Choices)
 
                             {
 
-                                db.Execute("INSERT INTO Choices (ChoiceText, QuestionId) VALUES (@ChoiceText, @QuestionId)", new { ChoiceText = choice.ChoiceText, QuestionId = questionId });
+                                await Task.Run(() => db.Execute("INSERT INTO Choices (ChoiceText, QuestionId) VALUES (@ChoiceText, @QuestionId)", new { ChoiceText = choice.ChoiceText, QuestionId = questionId }));
 
                             }
 
@@ -66,6 +71,8 @@ namespace QuizApi.Controllers
 
                 }
 
+
+
                 return Ok("Quiz data saved successfully.");
 
             }
@@ -74,17 +81,19 @@ namespace QuizApi.Controllers
 
             {
 
-                Console.WriteLine("We have an exception \n" + ex.Message);
+                Console.WriteLine(ex.Message);
+
+                return StatusCode(500, "An error occurred while saving the quiz data.");
 
             }
-            return NotFound();
+
         }
 
 
 
-        [HttpGet]
 
-        public IActionResult GetQuiz(int quizId)
+        [HttpGet("load/{quizId}")]
+        public async Task<IActionResult> GetQuiz(int quizId)
 
         {
 
@@ -98,11 +107,15 @@ namespace QuizApi.Controllers
 
                     var quiz = RetrieveQuiz(db, quizId);
 
+
+
                     if (quiz != null)
 
                     {
 
                         var questions = RetrieveQuestions(db, quizId);
+
+
 
                         foreach (var question in questions)
 
@@ -112,11 +125,15 @@ namespace QuizApi.Controllers
 
                         }
 
+
+
                         quiz.Questions = questions;
 
                         return Ok(quiz);
 
                     }
+
+
 
                     return NotFound();
 
@@ -128,12 +145,15 @@ namespace QuizApi.Controllers
 
             {
 
-                Console.WriteLine("We have an exception \n" + ex.Message);
+               
+                Console.WriteLine(ex.Message);
+
+                return StatusCode(500, "An error occurred while fetching the quiz data.");
 
             }
-            return NotFound();
 
         }
+
 
 
 
@@ -143,6 +163,7 @@ namespace QuizApi.Controllers
 
             string query = "SELECT Id, QuizName FROM Quizzes WHERE Id = @QuizId";
 
+           
             return db.QueryFirstOrDefault<Quiz>(query, new { QuizId = quizId });
 
         }
@@ -155,9 +176,47 @@ namespace QuizApi.Controllers
 
             string query = "SELECT Id, QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation FROM Questions WHERE QuizId = @QuizId";
 
-            return db.Query<Question>(query, new { QuizId = quizId }).ToList();
+
+
+            var questions = db.Query<Question>(query, new { QuizId = quizId });
+
+
+
+            foreach (var question in questions)
+
+            {
+
+                // Check for null values and assign defaults if necessary
+
+                if (question.CorrectExplanation == null)
+
+                {
+
+                    question.CorrectExplanation = string.Empty; // Or any default value that fits your model
+
+                }
+
+
+
+                if (question.IncorrectExplanation == null)
+
+                {
+
+                    question.IncorrectExplanation = string.Empty; // Or any default value that fits your model
+
+                }
+
+            }
+
+
+
+            return questions.ToList();
 
         }
+
+
+
+
 
 
 

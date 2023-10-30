@@ -600,6 +600,51 @@ function previewXmlData() {
     const xmlString = convertToXML(previewData, passingQuestions, score);
     xmlTextArea.value = xmlString;
 }
+// Function to save quiz data to the server
+async function saveQuizToServer(quizData) {
+    try {
+        const response = await fetch('/api/Quiz/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(quizData),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Quiz saved:', result);
+            // Handle the success scenario here
+        } else {
+            // Handle errors
+            const errorData = await response.json();
+            console.error('Error:', errorData);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Function to load quiz data from the server
+async function loadQuizFromServer(quizId) {
+    try {
+        const response = await fetch(`/api/Quiz/get?quizId=${quizId}`, {
+            method: 'GET',
+        });
+
+        if (response.ok) {
+            const quizData = await response.json();
+            console.log('Quiz loaded:', quizData);
+            // Handle the success scenario here
+        } else {
+            // Handle errors
+            const errorData = await response.json();
+            console.error('Error:', errorData);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
 
 // Function to save the quiz data as XML
@@ -621,7 +666,8 @@ function saveQuizAsXML() {
     const questionDivs = quizContainer.getElementsByClassName("question");
 
     quizData = [];
-    for (let i = 0; i < questionDivs.length; i++) {
+    for (let i = 0; i < questionDivs.length; i++)
+    {
         const questionDiv = questionDivs[i];
 
         const questionInput = questionDiv.querySelector(".question-input");
@@ -659,6 +705,54 @@ function saveQuizAsXML() {
             incorrectExplain: incorrectExplain,
         });
     }
+
+    // Send the quiz data to the server using an HTTP POST request
+
+    fetch('/api/Quiz/save', {
+
+        method: 'POST',
+
+        headers: {
+
+            'Content-Type': 'application/json',
+
+        },
+
+        body: JSON.stringify(quizData), // Convert quizData to JSON
+
+    })
+
+        .then(response => {
+
+            if (response.ok) {
+
+                return response.json(); // If the response is JSON, parse it
+
+            } else {
+
+                throw new Error('Failed to save quiz data to the server.');
+
+            }
+
+        })
+
+        .then(data => {
+
+            console.log('Quiz data saved successfully:', data);
+
+            // Additional actions after successful save
+
+        })
+
+        .catch(error => {
+
+            console.error('Error saving quiz data:', error);
+
+            // Handle the error accordingly
+
+        });
+
+
 
     // Convert quizData to XML format
     const xmlString = convertToXML(quizData, score);
