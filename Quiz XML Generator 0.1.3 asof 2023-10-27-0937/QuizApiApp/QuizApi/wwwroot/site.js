@@ -2,7 +2,7 @@
 let numQuestions = 0;
 let quizData = [];
 const regex = /^[\w\s.,?!-]*$/;
-
+const uri = 'https://localhost:7120/api/quiz';
 //  code to initialize IndexedDB
 let db;
 const request = indexedDB.open("QuizDB", 1);
@@ -102,6 +102,7 @@ function addQuestion() {
     const questionInput = document.createElement("input");
     questionInput.type = "text";
     questionInput.className = "question-input required-field";
+    questionInput.id = "question"
     questionInput.placeholder = "Enter the question";
     questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionInput);
@@ -112,6 +113,7 @@ function addQuestion() {
         const choiceLabel = document.createElement("label");
         choiceLabel.textContent = `Choice ${j}: `;
         const choiceInput = document.createElement("input");
+        choiceInput.id = "choice"
         choiceInput.type = "text";
         choiceInput.className = "choice-input required-field";
         choiceInput.placeholder = "Enter choice";
@@ -128,6 +130,7 @@ function addQuestion() {
     correctAnswerInput.min = 1;
     correctAnswerInput.max = numChoices;
     correctAnswerInput.className = "correct-answer-input required-field";
+    correctAnswerInput.id = "answer"
     correctAnswerInput.addEventListener("input", () => validateCorrectAnswer(correctAnswerInput, numChoices));
     questionDiv.appendChild(correctAnswerLabel);
     questionDiv.appendChild(correctAnswerInput);
@@ -138,6 +141,7 @@ function addQuestion() {
     const correctExplainInput = document.createElement("input");
     correctExplainInput.type = "text";
     correctExplainInput.className = "correct-explain-input required-field";
+    correctExplainInput.id = "correctExplanation"
     correctExplainInput.placeholder = "Enter explanation for correct answer";
     questionDiv.appendChild(correctExplainLabel);
     questionDiv.appendChild(correctExplainInput);
@@ -148,6 +152,7 @@ function addQuestion() {
     const incorrectExplainInput = document.createElement("input");
     incorrectExplainInput.type = "text";
     incorrectExplainInput.className = "incorrect-explain-input required-field";
+    incorrectExplainInput.id = "incorrectExplanation"
     incorrectExplainInput.placeholder = "Enter explanation for incorrect answer";
     questionDiv.appendChild(incorrectExplainLabel);
     questionDiv.appendChild(incorrectExplainInput);
@@ -600,51 +605,6 @@ function previewXmlData() {
     const xmlString = convertToXML(previewData, passingQuestions, score);
     xmlTextArea.value = xmlString;
 }
-// Function to save quiz data to the server
-async function saveQuizToServer(quizData) {
-    try {
-        const response = await fetch('/api/Quiz/save', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(quizData),
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Quiz saved:', result);
-            // Handle the success scenario here
-        } else {
-            // Handle errors
-            const errorData = await response.json();
-            console.error('Error:', errorData);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-// Function to load quiz data from the server
-async function loadQuizFromServer(quizId) {
-    try {
-        const response = await fetch(`/api/Quiz/get?quizId=${quizId}`, {
-            method: 'GET',
-        });
-
-        if (response.ok) {
-            const quizData = await response.json();
-            console.log('Quiz loaded:', quizData);
-            // Handle the success scenario here
-        } else {
-            // Handle errors
-            const errorData = await response.json();
-            console.error('Error:', errorData);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
 
 
 // Function to save the quiz data as XML
@@ -666,8 +626,7 @@ function saveQuizAsXML() {
     const questionDivs = quizContainer.getElementsByClassName("question");
 
     quizData = [];
-    for (let i = 0; i < questionDivs.length; i++)
-    {
+    for (let i = 0; i < questionDivs.length; i++) {
         const questionDiv = questionDivs[i];
 
         const questionInput = questionDiv.querySelector(".question-input");
@@ -706,54 +665,6 @@ function saveQuizAsXML() {
         });
     }
 
-    // Send the quiz data to the server using an HTTP POST request
-
-    fetch('/api/Quiz/save', {
-
-        method: 'POST',
-
-        headers: {
-
-            'Content-Type': 'application/json',
-
-        },
-
-        body: JSON.stringify(quizData), // Convert quizData to JSON
-
-    })
-
-        .then(response => {
-
-            if (response.ok) {
-
-                return response.json(); // If the response is JSON, parse it
-
-            } else {
-
-                throw new Error('Failed to save quiz data to the server.');
-
-            }
-
-        })
-
-        .then(data => {
-
-            console.log('Quiz data saved successfully:', data);
-
-            // Additional actions after successful save
-
-        })
-
-        .catch(error => {
-
-            console.error('Error saving quiz data:', error);
-
-            // Handle the error accordingly
-
-        });
-
-
-
     // Convert quizData to XML format
     const xmlString = convertToXML(quizData, score);
 
@@ -784,7 +695,6 @@ function saveQuizAsXML() {
     URL.revokeObjectURL(url);
     link.remove();
 }
-
 // function copies
 function copyXmlToClipboard() {
     const xmlTextArea = document.getElementById("xmlTextArea");
@@ -863,7 +773,10 @@ passingQuestionsInput.addEventListener("input", () => {
 document.getElementById("addQuestionButton").addEventListener("click", addQuestion);
 
 // Event listeners for buttons
-document.getElementById("saveButton").addEventListener("click", saveQuizAsXML);
+document.getElementById("saveButton").addEventListener("click", function () {
+    addQuiz();
+    //saveQuizAsXML();
+}); 
 document.getElementById("copyButton").addEventListener("click", copyXmlToClipboard);
 
 // Event listener for Preview XML button
@@ -884,3 +797,104 @@ document.getElementById("loadButton").addEventListener("click", function () {
 // Call the update functions initially to set the initial values
 updatePassingQuestions();
 updateScore();
+
+
+function getUserInputValues() {
+    const quizName = document.getElementById('quizName').value;
+
+    const questionText = document.getElementById('questionText').value;
+    const correctChoiceIndex = document.getElementById('correctChoiceIndex').value;
+    const correctExplanation = document.getElementById('correctExplanation').value || null;
+    const incorrectExplanation = document.getElementById('incorrectExplanation').value || null;
+
+    const choiceText = document.getElementById('choiceText').value;
+
+    return {
+        quizName,
+        questions: [
+            {
+                QuestionText: questionText,
+                CorrectChoiceIndex: correctChoiceIndex,
+                CorrectExplanation: correctExplanation,
+                IncorrectExplanation: incorrectExplanation
+            }
+        ],
+        choices: [
+            { ChoiceText: choiceText }
+        ]
+    };
+}
+
+function saveQuiz(quizName) {
+    return fetch('https://localhost:7120/api/quiz', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ QuizName: quizName })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Quiz saved:', data);
+            return data; // Return the data or do something else if needed
+        })
+        .catch(error => {
+            console.error('Error saving quiz:', error);
+            throw error; // Throw or handle the error accordingly
+        });
+}
+
+
+function saveQuestion(questionData) {
+    return fetch('https://localhost:7120/api/question', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(questionData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Question saved:', data);
+            return data; // Return the data or do something else if needed
+        })
+        .catch(error => {
+            console.error('Error saving question:', error);
+            throw error; // Throw or handle the error accordingly
+        });
+}
+
+
+function saveChoice(choices) {
+    return fetch('https://localhost:7120/api/choice', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(choices)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Choice saved:', data);
+            return data; // Return the data or do something else if needed
+        })
+        .catch(error => {
+            console.error('Error saving choice:', error);
+            throw error; // Throw or handle the error accordingly
+        });
+}

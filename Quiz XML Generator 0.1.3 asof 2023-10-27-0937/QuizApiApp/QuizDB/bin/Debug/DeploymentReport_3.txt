@@ -1,0 +1,20 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [dbo].[Choices] (Table)
+       [dbo].[Questions] (Table)
+       [dbo].[Quizzes] (Table)
+       Default Constraint: unnamed constraint on [dbo].[Choices] (Default Constraint)
+       Default Constraint: unnamed constraint on [dbo].[Questions] (Default Constraint)
+       Default Constraint: unnamed constraint on [dbo].[Quizzes] (Default Constraint)
+
+** Supporting actions

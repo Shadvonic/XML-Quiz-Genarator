@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Choices]
 (
-	[Id] INT NOT NULL PRIMARY KEY  IDENTITY, 
+	[Id] uniqueidentifier NOT NULL PRIMARY KEY DEFAULT NEWID(), 
     [ChoiceText] NVARCHAR(MAX) NOT NULL, 
-    [QuestionId] INT NOT NULL
+    [QuestionId] uniqueidentifier NOT NULL
 )

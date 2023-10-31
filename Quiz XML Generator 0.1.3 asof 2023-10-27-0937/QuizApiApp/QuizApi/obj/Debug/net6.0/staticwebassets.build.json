@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "NTP1ZgQN7SMhVwoYR6ObwKENzocZvSCTMdALwS9cLsc=",
+  "Hash": "G5mL1zQEGOUBcOUBgfe0hMZG3dt+ivFRySrKYF8pRoM=",
   "Source": "QuizApi",
   "BasePath": "_content/QuizApi",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "QuizApi\\wwwroot",
       "Source": "QuizApi",
-      "ContentRoot": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\moxiem\\source\\repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
       "BasePath": "_content/QuizApi",
       "Pattern": "**"
     }
@@ -20,7 +20,7 @@
       "Identity": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\css\\site.css",
       "SourceId": "QuizApi",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\moxiem\\source\\repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
       "BasePath": "_content/QuizApi",
       "RelativePath": "css/site.css",
       "AssetKind": "All",
@@ -37,7 +37,7 @@
       "Identity": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\index.html",
       "SourceId": "QuizApi",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\moxiem\\source\\repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
       "BasePath": "_content/QuizApi",
       "RelativePath": "index.html",
       "AssetKind": "All",
@@ -54,7 +54,7 @@
       "Identity": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\site.js",
       "SourceId": "QuizApi",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\moxiem\\Source\\Repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\moxiem\\source\\repos\\Shadvonic\\XML-Quiz-Genarator\\Quiz XML Generator 0.1.3 asof 2023-10-27-0937\\QuizApiApp\\QuizApi\\wwwroot\\",
       "BasePath": "_content/QuizApi",
       "RelativePath": "site.js",
       "AssetKind": "All",
