@@ -751,52 +751,13 @@ function convertToXML(data, passingQuestions, score) {
 const scoreInput = document.getElementById("score");
 const passingQuestionsInput = document.getElementById("passingQuestions");
 
+
 scoreInput.addEventListener("input", () => {
     updatePassingQuestions();
     previewXmlData(); // Recalculate and update XML preview
 });
 
-passingQuestionsInput.addEventListener("input", () => {
-    const totalQuestionsAdded = numQuestions;
-    const enteredValue = parseInt(passingQuestionsInput.value.trim());
 
-    if (!isNaN(enteredValue) && enteredValue > totalQuestionsAdded) {
-        alert("You can't set more passing questions than the number of questions added.");
-        passingQuestionsInput.value = totalQuestionsAdded;
-    }
-
-    updateScore();
-    previewXmlData(); // Recalculate and update XML preview
-});
-
-// Event listener for Add Question button
-document.getElementById("addQuestionButton").addEventListener("click", addQuestion);
-
-// Event listeners for buttons
-document.getElementById("saveButton").addEventListener("click", function () {
-    addQuiz();
-    //saveQuizAsXML();
-}); 
-document.getElementById("copyButton").addEventListener("click", copyXmlToClipboard);
-
-// Event listener for Preview XML button
-document.getElementById("previewButton").addEventListener("click", previewXmlData);
-
-// Event listener for the Load button
-document.getElementById("loadButton").addEventListener("click", function () {
-    // Prompt the user for a quiz name
-    const quizName = prompt("Enter the quiz name to load:");
-
-    if (quizName) {
-        loadQuizFromDB(quizName);
-    } else {
-        alert("Please enter a valid quiz name.");
-    }
-});
-
-// Call the update functions initially to set the initial values
-updatePassingQuestions();
-updateScore();
 
 
 function getUserInputValues() {
@@ -898,3 +859,50 @@ function saveChoice(choices) {
             throw error; // Throw or handle the error accordingly
         });
 }
+
+
+passingQuestionsInput.addEventListener("input", () => {
+    const totalQuestionsAdded = numQuestions;
+    const enteredValue = parseInt(passingQuestionsInput.value.trim());
+
+    if (!isNaN(enteredValue) && enteredValue > totalQuestionsAdded) {
+        alert("You can't set more passing questions than the number of questions added.");
+        passingQuestionsInput.value = totalQuestionsAdded;
+    }
+
+    updateScore();
+    previewXmlData(); // Recalculate and update XML preview
+});
+
+// Event listener for Add Question button
+document.getElementById("addQuestionButton").addEventListener("click", addQuestion);
+
+// Event listeners for buttons
+document.getElementById("saveButton").addEventListener("click", function () {
+
+    saveChoice();
+    saveQuestion();
+    saveQuiz();
+    //saveQuizAsXML();
+}); 
+document.getElementById("copyButton").addEventListener("click", copyXmlToClipboard);
+
+// Event listener for Preview XML button
+document.getElementById("previewButton").addEventListener("click", previewXmlData);
+
+// Event listener for the Load button
+document.getElementById("loadButton").addEventListener("click", function () {
+    // Prompt the user for a quiz name
+    const quizName = prompt("Enter the quiz name to load:");
+
+    if (quizName) {
+        loadQuizFromDB(quizName);
+    } else {
+        alert("Please enter a valid quiz name.");
+    }
+});
+
+// Call the update functions initially to set the initial values
+updatePassingQuestions();
+updateScore();
+
