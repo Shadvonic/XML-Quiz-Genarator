@@ -39,6 +39,7 @@ namespace QuizApi.Controllers
            
             catch (Exception ex)
             {
+                Console.WriteLine($"An error occurred: {ex.Message}");
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
            
@@ -61,6 +62,7 @@ namespace QuizApi.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"An error occurred: {ex.Message}");
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
@@ -79,6 +81,7 @@ namespace QuizApi.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"An error occurred: {ex.Message}");
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
