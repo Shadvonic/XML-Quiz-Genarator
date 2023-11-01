@@ -763,12 +763,12 @@ scoreInput.addEventListener("input", () => {
 function getUserInputValues() {
     const quizName = document.getElementById('quizName').value;
 
-    const questionText = document.getElementsByClassName(".question-input").value.trim();
-    const correctChoiceIndex = document.getElementsByClassName(".correct-answer-input").value;
-    const correctExplanation = document.getElementsByClassName(".correct-explain-input").value.trim() || null;
-    const incorrectExplanation = document.getElementsByClassName(".incorrect-explain-input").value.trim() || null;
+    const questionText = document.getElementById(".question-input").value;
+    const correctChoiceIndex = document.getElementById(".correct-answer-input").value;
+    const correctExplanation = document.getElementById(".correct-explain-input").value || null;
+    const incorrectExplanation = document.getElementById(".incorrect-explain-input").value|| null;
 
-    const choiceText = document.getElementsByClassName(".choice-input").value.trim();
+    const choiceText = document.getElementById(".choice-input").value;
 
     return {
         quizName,
