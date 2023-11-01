@@ -56,15 +56,22 @@ namespace QuizApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SaveQuestion([FromBody] Question question)
+        public async Task<ActionResult> SaveQuestions([FromBody] List<Question> questions)
         {
             try
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
-                    var query = @"INSERT INTO Questions (QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation)
+                    foreach(var question in questions)
+                    {
+                        question.Id = Guid.NewGuid();
+
+
+                        var query = @"INSERT INTO Questions (QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation)
                               VALUES (@QuizId, @QuestionText, @CorrectChoiceIndex, @CorrectExplanation, @IncorrectExplanation)";
-                    await db.ExecuteAsync(query, question);
+                        await db.ExecuteAsync(query, question);
+                    }
+                    
                     return Ok();
                 }
             }

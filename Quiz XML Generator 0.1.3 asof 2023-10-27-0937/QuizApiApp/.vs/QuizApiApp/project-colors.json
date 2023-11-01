@@ -10,7 +10,17 @@
       "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
       "DisplayName": "Miscellaneous Files",
       "ColorIndex": -1
+    },
+    "152a385c-6409-465a-88d8-9c6f9710b32f": {
+      "ProjectGuid": "152a385c-6409-465a-88d8-9c6f9710b32f",
+      "DisplayName": "QuizDB",
+      "ColorIndex": 1
+    },
+    "a5f24d39-7d85-46da-878f-1e1826fdf2a4": {
+      "ProjectGuid": "a5f24d39-7d85-46da-878f-1e1826fdf2a4",
+      "DisplayName": "QuizLibrary",
+      "ColorIndex": 2
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 3
 }

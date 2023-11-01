@@ -763,12 +763,12 @@ scoreInput.addEventListener("input", () => {
 function getUserInputValues() {
     const quizName = document.getElementById('quizName').value;
 
-    const questionText = document.getElementById('questionText').value;
-    const correctChoiceIndex = document.getElementById('correctChoiceIndex').value;
-    const correctExplanation = document.getElementById('correctExplanation').value || null;
-    const incorrectExplanation = document.getElementById('incorrectExplanation').value || null;
+    const questionText = document.getElementsByClassName(".question-input").value.trim();
+    const correctChoiceIndex = document.getElementsByClassName(".correct-answer-input").value;
+    const correctExplanation = document.getElementsByClassName(".correct-explain-input").value.trim() || null;
+    const incorrectExplanation = document.getElementsByClassName(".incorrect-explain-input").value.trim() || null;
 
-    const choiceText = document.getElementById('choiceText').value;
+    const choiceText = document.getElementsByClassName(".choice-input").value.trim();
 
     return {
         quizName,
@@ -787,77 +787,42 @@ function getUserInputValues() {
 }
 
 function saveQuiz(quizName) {
-    return fetch('https://localhost:7120/api/quiz', {
+    fetch('https://localhost:7120/api/quiz', {
         method: 'POST',
+        body: JSON.stringify({ QuizName: quizName }),
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ QuizName: quizName })
+        }
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Quiz saved:', data);
-            return data; // Return the data or do something else if needed
-        })
-        .catch(error => {
-            console.error('Error saving quiz:', error);
-            throw error; // Throw or handle the error accordingly
-        });
+     .then(data => data.json())
+     .then(response => console.log(response));
+       
 }
 
 
-function saveQuestion(questionData) {
-    return fetch('https://localhost:7120/api/question', {
+function saveQuestion(questions) {
+    fetch('https://localhost:7120/api/question', {
         method: 'POST',
-        headers: {
+        body: JSON.stringify(question),
+            headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(questionData)
+        }
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Question saved:', data);
-            return data; // Return the data or do something else if needed
-        })
-        .catch(error => {
-            console.error('Error saving question:', error);
-            throw error; // Throw or handle the error accordingly
-        });
+        .then(data => data.json())
+        .then(response => console.log(response));
 }
 
 
 function saveChoice(choices) {
-    return fetch('https://localhost:7120/api/choice', {
+    fetch('https://localhost:7120/api/choice', {
         method: 'POST',
+        body: JSON.stringify(choices),
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(choices)
+        }
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Choice saved:', data);
-            return data; // Return the data or do something else if needed
-        })
-        .catch(error => {
-            console.error('Error saving choice:', error);
-            throw error; // Throw or handle the error accordingly
-        });
+    .then(data => data.json())
+    .then(response => console.log(response));
 }
 
 
@@ -878,13 +843,20 @@ passingQuestionsInput.addEventListener("input", () => {
 document.getElementById("addQuestionButton").addEventListener("click", addQuestion);
 
 // Event listeners for buttons
-document.getElementById("saveButton").addEventListener("click", function () {
+document.getElementById("saveButton").addEventListener("click", async function () {
+    const userInputValues = getUserInputValues();
 
-    saveChoice();
-    saveQuestion();
-    saveQuiz();
-    //saveQuizAsXML();
-}); 
+    try {
+        await Promise.all([
+            saveChoice(userInputValues.choices),
+            saveQuestion(userInputValues.questions),
+            saveQuiz(userInputValues.quizName)
+        ]);
+    } catch (error) {
+        console.error('Error saving:', error);
+        // Handle error accordingly
+    }
+});
 document.getElementById("copyButton").addEventListener("click", copyXmlToClipboard);
 
 // Event listener for Preview XML button

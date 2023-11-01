@@ -59,7 +59,7 @@ namespace QuizApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SaveChoice([FromBody] List<Choice> choices)
+        public async Task<ActionResult> SaveChoices([FromBody] List<Choice> choices)
         {
             try
             {
