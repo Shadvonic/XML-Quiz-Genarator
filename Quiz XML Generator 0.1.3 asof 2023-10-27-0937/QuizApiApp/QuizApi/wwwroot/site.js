@@ -760,31 +760,42 @@ scoreInput.addEventListener("input", () => {
 
 
 
-function getUserInputValues() {
-    const quizName = document.getElementById('quizName').value;
+function extractQuestionsAndChoices() {
+    const quizName = document.getElementById("quizName").value;
+    const questionDivs = document.getElementsByClassName("question");
 
-    const questionText = document.getElementById(".question-input").value;
-    const correctChoiceIndex = document.getElementById(".correct-answer-input").value;
-    const correctExplanation = document.getElementById(".correct-explain-input").value || null;
-    const incorrectExplanation = document.getElementById(".incorrect-explain-input").value|| null;
+    const questions = [];
+    const choices = [];
 
-    const choiceText = document.getElementById(".choice-input").value;
+    for (let i = 0; i < questionDivs.length; i++) {
+        const questionDiv = questionDivs[i];
+        const questionInput = questionDiv.querySelector('.question-input');
+        const correctAnswerInput = questionDiv.querySelector('.correct-answer-input');
+        const correctExplainInput = questionDiv.querySelector('.correct-explain-input');
+        const incorrectExplainInput = questionDiv.querySelector('.incorrect-explain-input');
+        const choiceInputs = questionDiv.querySelectorAll('.choice-input');
 
-    return {
-        quizName,
-        questions: [
-            {
-                QuestionText: questionText,
-                CorrectChoiceIndex: correctChoiceIndex,
-                CorrectExplanation: correctExplanation,
-                IncorrectExplanation: incorrectExplanation
-            }
-        ],
-        choices: [
-            { ChoiceText: choiceText }
-        ]
-    };
+        const question = {
+            QuestionText: questionInput.value,
+            CorrectChoiceIndex: correctAnswerInput.value,
+            CorrectExplanation: correctExplainInput.value || null,
+            IncorrectExplanation: incorrectExplainInput.value || null
+        };
+
+        questions.push(question);
+
+        for (let j = 0; j < choiceInputs.length; j++) {
+            const choice = {
+                ChoiceText: choiceInputs[j].value
+            };
+
+            choices.push(choice);
+        }
+    }
+
+    return { quizName, questions, choices };
 }
+
 
 function saveQuiz(quizName) {
     fetch('https://localhost:7120/api/quiz', {
@@ -800,7 +811,7 @@ function saveQuiz(quizName) {
 }
 
 
-function saveQuestion(questions) {
+function saveQuestion(question) {
     fetch('https://localhost:7120/api/question', {
         method: 'POST',
         body: JSON.stringify(question),
@@ -844,17 +855,17 @@ document.getElementById("addQuestionButton").addEventListener("click", addQuesti
 
 // Event listeners for buttons
 document.getElementById("saveButton").addEventListener("click", async function () {
-    const userInputValues = getUserInputValues();
+    const { quizName, questions, choices } = extractQuestionsAndChoices();
 
     try {
         await Promise.all([
-            saveChoice(userInputValues.choices),
-            saveQuestion(userInputValues.questions),
-            saveQuiz(userInputValues.quizName)
+            saveQuiz(quizName),
+            saveQuestion(questions),
+            saveChoice(choices)
         ]);
     } catch (error) {
         console.error('Error saving:', error);
-        // Handle error accordingly
+        // Handle the error accordingly
     }
 });
 document.getElementById("copyButton").addEventListener("click", copyXmlToClipboard);
