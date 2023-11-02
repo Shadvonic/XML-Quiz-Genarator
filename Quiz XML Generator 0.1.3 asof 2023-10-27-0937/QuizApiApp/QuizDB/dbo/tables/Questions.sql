@@ -5,5 +5,5 @@
     [QuestionText] NVARCHAR(MAX) NOT NULL, 
     [CorrectChoiceIndex] INT NOT NULL, 
     [CorrectExplanation] NVARCHAR(MAX) NULL, 
-    [IncorrectExplanation] NCHAR(10) NULL
+    [IncorrectExplanation] NVARCHAR(MAX) NULL
 )
