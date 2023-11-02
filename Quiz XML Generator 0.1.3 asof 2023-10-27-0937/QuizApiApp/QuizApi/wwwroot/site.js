@@ -9,64 +9,290 @@ let db;
 const request = indexedDB.open("QuizDB", 1);
 
 request.onerror = function (event) {
-
     console.error("IndexedDB error:", event.target.error);
-
 };
-
 
 request.onsuccess = function (event) {
-
     db = event.target.result;
-
     console.log("IndexedDB opened successfully");
-
 };
-
 
 request.onupgradeneeded = function (event) {
-
     db = event.target.result;
-
     const objectStore = db.createObjectStore("quizStore", { keyPath: "quizId", autoIncrement: true });
-
 };
 
-// Function to save quiz data to IndexedDB
 function saveQuizToDB(quizName, data) {
-
     const transaction = db.transaction(["quizStore"], "readwrite");
     const objectStore = transaction.objectStore("quizStore");
+
     const request = objectStore.add({ quizName: quizName, data: data });
 
     request.onsuccess = function (event) {
-
         console.log("Data saved to IndexedDB");
-
     };
+
     request.onerror = function (event) {
-
         console.error("Error saving data to IndexedDB:", event.target.error);
-
     };
+}
+
+function loadQuizFromDB(quizId) {
+    const transaction = db.transaction(["quizStore"], "readonly");
+    const objectStore = transaction.objectStore("quizStore");
+
+    const request = objectStore.get(quizId);
+
+    request.onsuccess = function (event) {
+        const quizData = event.target.result;
+        // Populate your quiz interface with the retrieved data here
+    };
+
+    request.onerror = function (event) {
+        console.error("Error loading data from IndexedDB:", event.target.error);
+    };
+}
+
+
+
+function populateQuizInterface(loadedData) {
+
+    const quizContainer = document.getElementById("quizContainer");
+
+
+
+    // Clear existing questions by clearing the quiz container
+
+    clearQuestionContainer(quizContainer);
+
+
+
+    // Iterate through the loaded quiz data and populate the interface
+
+    loadedData.forEach((item) => {
+
+        // Create a new question container
+
+        const questionDiv = document.createElement("div");
+
+        questionDiv.className = "question";
+
+
+
+        // Populate the question and other inputs
+
+        const questionLabel = document.createElement("label");
+
+        questionLabel.textContent = `Question ${numQuestions + 1}: `;
+
+        const questionInput = document.createElement("input");
+
+        questionInput.type = "text";
+
+        questionInput.className = "question-input required-field";
+
+        questionInput.value = item.question;
+
+        questionDiv.appendChild(questionLabel);
+
+        questionDiv.appendChild(questionInput);
+
+        questionDiv.appendChild(document.createElement("br"));
+
+
+
+        // Populate options
+
+        item.options.forEach((option, optionIndex) => {
+
+            const choiceLabel = document.createElement("label");
+
+            choiceLabel.textContent = `Choice ${optionIndex + 1}: `;
+
+            const choiceInput = document.createElement("input");
+
+            choiceInput.type = "text";
+
+            choiceInput.className = "choice-input required-field";
+
+            choiceInput.value = option.text;
+
+            questionDiv.appendChild(choiceLabel);
+
+            questionDiv.appendChild(choiceInput);
+
+            questionDiv.appendChild(document.createElement("br"));
+
+        });
+
+
+
+        // Populate correct answer choice
+
+        const correctAnswerLabel = document.createElement("label");
+
+        correctAnswerLabel.textContent = `Correct Answer Choice (1-${item.options.length}): `;
+
+        const correctAnswerInput = document.createElement("input");
+
+        correctAnswerInput.type = "number";
+
+        correctAnswerInput.min = 1;
+
+        correctAnswerInput.max = item.options.length;
+
+        correctAnswerInput.className = "correct-answer-input required-field";
+
+        correctAnswerInput.value = item.answer + 1;
+
+        questionDiv.appendChild(correctAnswerLabel);
+
+        questionDiv.appendChild(correctAnswerInput);
+
+        questionDiv.appendChild(document.createElement("br"));
+
+
+
+        // Populate explanations
+
+        const correctExplainLabel = document.createElement("label");
+
+        correctExplainLabel.textContent = "Explanation for Correct Answer: ";
+
+        const correctExplainInput = document.createElement("input");
+
+        correctExplainInput.type = "text";
+
+        correctExplainInput.className = "correct-explain-input required-field";
+
+        correctExplainInput.value = item.correctExplain;
+
+        questionDiv.appendChild(correctExplainLabel);
+
+        questionDiv.appendChild(correctExplainInput);
+
+        questionDiv.appendChild(document.createElement("br"));
+
+
+
+        const incorrectExplainLabel = document.createElement("label");
+
+        incorrectExplainLabel.textContent = "Explanation for Incorrect Answer: ";
+
+        const incorrectExplainInput = document.createElement("input");
+
+        incorrectExplainInput.type = "text";
+
+        incorrectExplainInput.className = "incorrect-explain-input required-field";
+
+        incorrectExplainInput.value = item.incorrectExplain;
+
+        questionDiv.appendChild(incorrectExplainLabel);
+
+        questionDiv.appendChild(incorrectExplainInput);
+
+        questionDiv.appendChild(document.createElement("br"));
+
+
+
+        // Add Delete button
+
+        const deleteButton = document.createElement("button");
+
+        deleteButton.textContent = "Delete";
+
+        deleteButton.className = "delete-button";
+
+        deleteButton.addEventListener("click", () => deleteQuestion(numQuestions + 1));
+
+        questionDiv.appendChild(deleteButton);
+
+
+
+        // Add Clear button
+
+        const clearButton = document.createElement("button");
+
+        clearButton.textContent = "Clear";
+
+        clearButton.className = "clear-button";
+
+        clearButton.addEventListener("click", () => clearQuestionContainer(questionDiv));
+
+        questionDiv.appendChild(clearButton);
+
+
+
+        // Append the question container to the quiz container
+
+        quizContainer.appendChild(questionDiv);
+
+
+
+        // Increment the question count
+
+        numQuestions++;
+
+    });
+
+
+
+    // Update the question count label
+
+    updateQuestionCountLabel();
+
+
+
+    // Enable the save and copy buttons
+
+    document.getElementById("saveButton").disabled = false;
+
+    document.getElementById("copyButton").disabled = false;
 
 }
 
 
-// Function to retrieve quiz data from IndexedDB
-function loadQuizFromDB(quizId) {
+// Function to retrieve quiz data from IndexedDB using quiz name
+function loadQuizFromDB(quizName) {
 
     const transaction = db.transaction(["quizStore"], "readonly");
+
     const objectStore = transaction.objectStore("quizStore");
-    const request = objectStore.get(quizId);
+
+
+
+    const request = objectStore.openCursor();
+
+
 
     request.onsuccess = function (event) {
 
-        const quizData = event.target.result;
+        const cursor = event.target.result;
 
-        // Populate your quiz interface with the retrieved data here
+        if (cursor) {
+
+            const record = cursor.value;
+
+            if (record.quizName === quizName) {
+
+                quizData = record.data; // Update the quizData array
+
+                populateQuizInterface(quizData);
+
+                return;
+
+            }
+
+            cursor.continue();
+
+        } else {
+
+            console.error("Quiz data not found for the given name:", quizName);
+
+        }
 
     };
+
     request.onerror = function (event) {
 
         console.error("Error loading data from IndexedDB:", event.target.error);
@@ -74,6 +300,28 @@ function loadQuizFromDB(quizId) {
     };
 
 }
+
+
+// Update loadQuiz function to populate the interface
+// when the Load button is clicked
+function loadQuiz(quizId) {
+
+    const quizContainer = document.getElementById("quizContainer");
+
+
+
+    // Clear existing questions by clearing the quiz container
+
+    clearQuestionContainer(quizContainer);
+
+
+
+    // Load quiz data from IndexedDB and populate the interface
+
+    loadQuizFromDB(quizId);
+
+}
+
 
 // Function to add a new question
 function addQuestion() {
@@ -362,55 +610,98 @@ function addQuestion() {
 // Function to dynamically add new choice
 function addChoice(questionContainer) {
 
+
+
     const maxChoices = 50; // Maximum number of choices allowed
+
+
+
     const currentChoices = questionContainer.querySelectorAll(".choice-input").length;
 
     if (currentChoices >= maxChoices) {
 
         alert(`You can't add more than ${maxChoices} choices.`);
+
         return;
 
     }
 
+
+
     const choiceContainer = document.createElement("div");
+
     choiceContainer.className = "choice-container";
 
+
+
     const choiceNumberLabel = document.createElement("label");
+
     choiceNumberLabel.className = "choice-number-label";
+
     choiceNumberLabel.textContent = `Choice ${questionContainer.querySelectorAll(".choice-input").length + 1}: `;
+
     choiceContainer.appendChild(choiceNumberLabel);
+
+
+
     const choiceInput = document.createElement("input");
+
     choiceInput.type = "text";
+
     choiceInput.className = "choice-input required-field";
+
     choiceInput.placeholder = "Enter choice";
+
     choiceContainer.appendChild(choiceInput);
 
+
+
     // Add "Delete Choice" button
+
     const deleteChoiceButton = document.createElement("button");
+
     deleteChoiceButton.textContent = "Delete Choice";
+
     deleteChoiceButton.className = "delete-choice-button";
+
     deleteChoiceButton.addEventListener("click", () => deleteChoice(choiceContainer));
+
     choiceContainer.appendChild(deleteChoiceButton);
 
+
+
     // Insert the new choice container before the correct answer label
+
     const correctAnswerInput = questionContainer.querySelector(".correct-answer-input");
+
     const correctAnswerLabel = correctAnswerInput.previousElementSibling;
+
     questionContainer.insertBefore(choiceContainer, correctAnswerLabel);
 
+
+
     // Update choice labels for existing choices
+
     const choiceInputs = questionContainer.querySelectorAll(".choice-input");
+
     choiceInputs.forEach((choiceInput, index) => {
 
         choiceInput.previousSibling.textContent = `Choice ${index + 1}: `;
 
     });
 
+
+
     // Update the correct answer label's text content
+
     const numChoices = choiceInputs.length; // +1 for the new choice
 
     correctAnswerLabel.textContent = `Correct Answer Choice (1-${numChoices}): `;
 
+
+
     // Update the maximum value of the correct answer input
+
     correctAnswerInput.max = numChoices;
 
 }
@@ -697,188 +988,7 @@ function validateCorrectAnswer(inputElement, maxChoices) {
 }
 
 
-// Function to retrieve quiz data from IndexedDB using quiz name
-function loadQuizFromDB(quizName) {
 
-    const transaction = db.transaction(["quizStore"], "readonly");
-
-    const objectStore = transaction.objectStore("quizStore");
-
-
-
-    const request = objectStore.openCursor();
-
-
-
-    request.onsuccess = function (event) {
-
-        const cursor = event.target.result;
-
-        if (cursor) {
-
-            const record = cursor.value;
-
-            if (record.quizName === quizName) {
-
-                quizData = record.data; // Update the quizData array
-
-                populateQuizInterface(quizData);
-
-                return;
-
-            }
-
-            cursor.continue();
-
-        } else {
-
-            console.error("Quiz data not found for the given name:", quizName);
-
-        }
-
-    };
-
-    request.onerror = function (event) {
-
-        console.error("Error loading data from IndexedDB:", event.target.error);
-
-    };
-
-}
-
-
-// Update loadQuiz function to populate the interface
-// when the Load button is clicked
-function loadQuiz(quizId) {
-
-    const quizContainer = document.getElementById("quizContainer");
-
-
-
-    // Clear existing questions by clearing the quiz container
-
-    clearQuestionContainer(quizContainer);
-
-
-
-    // Load quiz data from IndexedDB and populate the interface
-
-    loadQuizFromDB(quizId);
-
-}
-
-
-function populateQuizInterface(loadedData) {
-
-    const quizContainer = document.getElementById("quizContainer");
-
-    // Clear existing questions by clearing the quiz container
-
-    clearQuestionContainer(quizContainer);
-
-    // Iterate through the loaded quiz data and populate the interface
-
-    loadedData.forEach((item) => {
-
-        // Create a new question container
-        const questionDiv = document.createElement("div");
-        questionDiv.className = "question";
-
-        // Populate the question and other inputs
-        const questionLabel = document.createElement("label");
-        questionLabel.textContent = `Question ${numQuestions + 1}: `;
-        const questionInput = document.createElement("input");
-        questionInput.type = "text";
-        questionInput.className = "question-input required-field";
-        questionInput.value = item.question;
-        questionDiv.appendChild(questionLabel);
-        questionDiv.appendChild(questionInput);
-        questionDiv.appendChild(document.createElement("br"));
-
-        // Populate options
-        item.options.forEach((option, optionIndex) => {
-
-            const choiceLabel = document.createElement("label");
-            choiceLabel.textContent = `Choice ${optionIndex + 1}: `;
-            const choiceInput = document.createElement("input");
-            choiceInput.type = "text";
-            choiceInput.className = "choice-input required-field";
-            choiceInput.value = option.text;
-            questionDiv.appendChild(choiceLabel);
-            questionDiv.appendChild(choiceInput);
-            questionDiv.appendChild(document.createElement("br"));
-
-        });
-
-        // Populate correct answer choice
-        const correctAnswerLabel = document.createElement("label");
-        correctAnswerLabel.textContent = `Correct Answer Choice (1-${item.options.length}): `;
-        const correctAnswerInput = document.createElement("input");
-        correctAnswerInput.type = "number";
-        correctAnswerInput.min = 1;
-        correctAnswerInput.max = item.options.length;
-        correctAnswerInput.className = "correct-answer-input required-field";
-        correctAnswerInput.value = item.answer + 1;
-        questionDiv.appendChild(correctAnswerLabel);
-        questionDiv.appendChild(correctAnswerInput);
-        questionDiv.appendChild(document.createElement("br"));
-
-
-        // Populate explanations
-        const correctExplainLabel = document.createElement("label");
-        correctExplainLabel.textContent = "Explanation for Correct Answer: ";
-        const correctExplainInput = document.createElement("input");
-        correctExplainInput.type = "text";
-        correctExplainInput.className = "correct-explain-input required-field";
-        correctExplainInput.value = item.correctExplain;
-        questionDiv.appendChild(correctExplainLabel);
-        questionDiv.appendChild(correctExplainInput);
-        questionDiv.appendChild(document.createElement("br"));
-
-
-
-        const incorrectExplainLabel = document.createElement("label");
-        incorrectExplainLabel.textContent = "Explanation for Incorrect Answer: ";
-        const incorrectExplainInput = document.createElement("input");
-        incorrectExplainInput.type = "text";
-        incorrectExplainInput.className = "incorrect-explain-input required-field";
-        incorrectExplainInput.value = item.incorrectExplain;
-        questionDiv.appendChild(incorrectExplainLabel);
-        questionDiv.appendChild(incorrectExplainInput);
-        questionDiv.appendChild(document.createElement("br"));
-
-
-
-        // Add Delete button
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.className = "delete-button";
-        deleteButton.addEventListener("click", () => deleteQuestion(numQuestions + 1));
-        questionDiv.appendChild(deleteButton);
-
-        // Add Clear button
-        const clearButton = document.createElement("button");
-        clearButton.textContent = "Clear";
-        clearButton.className = "clear-button";
-        clearButton.addEventListener("click", () => clearQuestionContainer(questionDiv));
-        questionDiv.appendChild(clearButton);
-
-        // Append the question container to the quiz container
-        quizContainer.appendChild(questionDiv);
-
-        // Increment the question count
-        numQuestions++;
-
-    });
-
-    // Update the question count label
-    updateQuestionCountLabel();
-
-    // Enable the save and copy buttons
-    document.getElementById("saveButton").disabled = false;
-    document.getElementById("copyButton").disabled = false;
-
-}
 
 
 // Function to preview XML data based on input fields
@@ -1012,8 +1122,13 @@ function saveQuizAsXML() {
 
     }
 
+
+
     const scoreInput = document.getElementById("score");
+
     const score = scoreInput.value.trim(); // Get the input value and remove leading/trailing spaces
+
+
 
     if (!/^[0-9]+$/.test(score)) {
 
@@ -1023,21 +1138,37 @@ function saveQuizAsXML() {
 
     }
 
+
+
     const quizContainer = document.getElementById("quizContainer");
+
     const questionDivs = quizContainer.getElementsByClassName("question");
+
+
 
     quizData = [];
 
     for (let i = 0; i < questionDivs.length; i++) {
 
         const questionDiv = questionDivs[i];
+
+
+
         const questionInput = questionDiv.querySelector(".question-input");
+
         const choiceInputs = questionDiv.querySelectorAll(".choice-input");
+
         const correctAnswerInput = questionDiv.querySelector(".correct-answer-input");
+
         const correctExplainInput = questionDiv.querySelector(".correct-explain-input");
+
         const incorrectExplainInput = questionDiv.querySelector(".incorrect-explain-input");
 
+
+
         const question = questionInput.value.trim();
+
+
 
         const options = [];
 
@@ -1052,11 +1183,15 @@ function saveQuizAsXML() {
 
 
         const correctAnswerIndex = parseInt(correctAnswerInput.value);
+
         const maxChoices = options.length;
+
+
 
         if (isNaN(correctAnswerIndex) || correctAnswerIndex < 1 || correctAnswerIndex > maxChoices) {
 
             alert(`Invalid correct answer choice for question ${i + 1}. Please enter a value between 1 and ${maxChoices}.`);
+
             return;
 
         }
@@ -1064,7 +1199,11 @@ function saveQuizAsXML() {
 
 
         const correctAnswer = correctAnswerIndex - 1;
+
+
+
         const correctExplain = correctExplainInput.value.trim();
+
         const incorrectExplain = incorrectExplainInput.value.trim();
 
 
@@ -1072,38 +1211,57 @@ function saveQuizAsXML() {
         quizData.push({
 
             question: question,
+
             options: options,
+
             answer: correctAnswer,
+
             correctExplain: correctExplain,
+
             incorrectExplain: incorrectExplain,
 
         });
 
     }
 
+
+
     // Convert quizData to XML format
+
     const xmlString = convertToXML(quizData, score);
 
+
+
     // Create a Blob with the XML data
+
     const blob = new Blob([xmlString], { type: "text/xml" });
 
+
+
     // Create a link to download the Blob
+
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement("a");
 
     link.href = url;
 
+
+
     const quizName = document.getElementById("quizName").value;
 
     if (quizName) {
 
         // Save quizData to IndexedDB with the dynamic quizName
+
         saveQuizToDB(quizName, quizData);
 
     }
 
+
+
     // Prompt the user to enter the filename
+
     const filename = prompt("Enter the filename for the XML file:", "quiz.xml");
 
     if (filename) {
@@ -1118,8 +1276,12 @@ function saveQuizAsXML() {
 
     }
 
+
+
     // Clean up the URL and remove the link element
+
     URL.revokeObjectURL(url);
+
     link.remove();
 
 }
@@ -1152,33 +1314,52 @@ function convertToXML(data, passingQuestions, score) {
 
     let xmlString = `<?xml version="1.0" encoding="UTF-8"?>\n<quiz`;
 
+
+
     if (passingQuestions !== 0) {
 
+
+
         xmlString += ` score="${passingQuestions || score}"`;
+
+
 
     } else {
 
         // Use the entered score value here
+
         xmlString += ` score="${score}"`;
 
     }
+
+
+
     xmlString += ` answerstyle="none">\n`;
+
+
 
     data.forEach((item, index) => {
 
         xmlString += `  <question index="${index + 1}" text="${item.question}" answer="${item.answer + 1}">\n`;
 
+
+
         // Add options
+
         item.options.forEach((option, optionIndex) => {
 
             xmlString += `    <option i="${optionIndex + 1}" text="${option.text}" />\n`;
 
         });
 
+
+
         // Add explanations if provided
+
         if (item.correctExplain && item.correctExplain.trim() !== "") {
 
             xmlString += `    <explanation text="${item.correctExplain}" appearance="correct" />\n`;
+
         }
 
         if (item.incorrectExplain && item.incorrectExplain.trim() !== "") {
@@ -1186,11 +1367,19 @@ function convertToXML(data, passingQuestions, score) {
             xmlString += `    <explanation text="${item.incorrectExplain}" appearance="incorrect" />\n`;
 
         }
+
+
+
         xmlString += '  </question>\n';
 
     });
 
+
+
     xmlString += "</quiz>";
+
+
+
     return xmlString;
 
 }
@@ -1212,10 +1401,13 @@ scoreInput.addEventListener("input", () => {
 function extractQuestionsAndChoices() {
 
     const quizName = document.getElementById("quizName").value;
+
     const questionDivs = document.getElementsByClassName("question");
 
 
+
     const questions = [];
+
     const choices = [];
 
 
@@ -1223,10 +1415,15 @@ function extractQuestionsAndChoices() {
     for (let i = 0; i < questionDivs.length; i++) {
 
         const questionDiv = questionDivs[i];
+
         const questionInput = questionDiv.querySelector('.question-input');
+
         const correctAnswerInput = questionDiv.querySelector('.correct-answer-input');
+
         const correctExplainInput = questionDiv.querySelector('.correct-explain-input');
+
         const incorrectExplainInput = questionDiv.querySelector('.incorrect-explain-input');
+
         const choiceInputs = questionDiv.querySelectorAll('.choice-input');
 
 
@@ -1234,13 +1431,20 @@ function extractQuestionsAndChoices() {
         const question = {
 
             QuestionText: questionInput.value,
+
             CorrectChoiceIndex: correctAnswerInput.value,
+
             CorrectExplanation: correctExplainInput.value || null,
+
             IncorrectExplanation: incorrectExplainInput.value || null
 
         };
 
+
+
         questions.push(question);
+
+
 
         for (let j = 0; j < choiceInputs.length; j++) {
 
@@ -1250,11 +1454,16 @@ function extractQuestionsAndChoices() {
 
             };
 
+
+
             choices.push(choice);
 
         }
 
     }
+
+
+
     return { quizName, questions, choices };
 
 }
@@ -1277,7 +1486,11 @@ function saveQuiz(quizName) {
     })
 
         .then(data => data.json())
+
         .then(response => console.log(response));
+
+
+
 }
 
 
@@ -1298,7 +1511,9 @@ function saveQuestion(question) {
     })
 
         .then(data => data.json())
+
         .then(response => console.log(response));
+
 }
 
 function saveChoice(choices) {
@@ -1316,7 +1531,9 @@ function saveChoice(choices) {
         }
 
     })
+
         .then(data => data.json())
+
         .then(response => console.log(response));
 
 }
@@ -1325,16 +1542,23 @@ function saveChoice(choices) {
 passingQuestionsInput.addEventListener("input", () => {
 
     const totalQuestionsAdded = numQuestions;
+
     const enteredValue = parseInt(passingQuestionsInput.value.trim());
+
+
 
     if (!isNaN(enteredValue) && enteredValue > totalQuestionsAdded) {
 
         alert("You can't set more passing questions than the number of questions added.");
+
         passingQuestionsInput.value = totalQuestionsAdded;
 
     }
 
+
+
     updateScore();
+
     previewXmlData(); // Recalculate and update XML preview
 
 });
@@ -1356,6 +1580,8 @@ document.getElementById("saveButton").addEventListener("click", async function (
 
         ]);
 
+        saveQuizAsXML();
+
     } catch (error) {
 
         console.error('Error saving:', error);
@@ -1374,7 +1600,7 @@ document.getElementById("previewButton").addEventListener("click", previewXmlDat
 document.getElementById("loadButton").addEventListener("click", function () {
 
     // Prompt the user for a quiz name
-    const quizName = document.getElementById("quizName").value;
+    const quizName =    prompt("Please enter a quiz name to load quiz") 
 
     if (quizName) {
 
@@ -1385,6 +1611,7 @@ document.getElementById("loadButton").addEventListener("click", function () {
         alert("Please enter a valid quiz name.");
 
     }
+
 });
 
 
