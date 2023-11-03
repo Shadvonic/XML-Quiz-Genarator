@@ -12,5 +12,6 @@ namespace QuizApi.Models
         public Guid Id { get; set; }
         public string QuizName { get; set; } = "";
        
+
     }
 }

@@ -1434,9 +1434,9 @@ function extractQuestionsAndChoices() {
 
             CorrectChoiceIndex: correctAnswerInput.value,
 
-            CorrectExplanation: correctExplainInput.value || null,
+            CorrectExplanation: correctExplainInput.value == '' ? correctExplainInput.value: null,
 
-            IncorrectExplanation: incorrectExplainInput.value || null
+            IncorrectExplanation: incorrectExplainInput.value == '' ? incorrectExplainInput.value: null
 
         };
 
@@ -1467,6 +1467,7 @@ function extractQuestionsAndChoices() {
     return { quizName, questions, choices };
 
 }
+
 
 
 function saveQuiz(quizName) {
@@ -1539,6 +1540,8 @@ function saveChoice(choices) {
 }
 
 
+
+
 passingQuestionsInput.addEventListener("input", () => {
 
     const totalQuestionsAdded = numQuestions;
@@ -1580,13 +1583,14 @@ document.getElementById("saveButton").addEventListener("click", async function (
 
         ]);
 
-        saveQuizAsXML();
+        //saveQuizAsXML();
 
     } catch (error) {
 
         console.error('Error saving:', error);
     }
 });
+
 
 
 document.getElementById("copyButton").addEventListener("click", copyXmlToClipboard);
@@ -1600,7 +1604,7 @@ document.getElementById("previewButton").addEventListener("click", previewXmlDat
 document.getElementById("loadButton").addEventListener("click", function () {
 
     // Prompt the user for a quiz name
-    const quizName =    prompt("Please enter a quiz name to load quiz") 
+    const quizName = prompt("Please enter a quiz name to load quiz")
 
     if (quizName) {
 
@@ -1619,4 +1623,3 @@ document.getElementById("loadButton").addEventListener("click", function () {
 // Call the update functions initially to set the initial values
 updatePassingQuestions();
 updateScore();
-

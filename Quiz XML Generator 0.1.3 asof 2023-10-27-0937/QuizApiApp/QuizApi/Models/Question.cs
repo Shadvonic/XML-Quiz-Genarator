@@ -16,7 +16,9 @@ namespace QuizApi.Models
         public int CorrectChoiceIndex { get; set; } 
         public string CorrectExplanation { get; set; } = "";
         public string IncorrectExplanation { get; set; } = "";
-       
-  
+   
+
+
+
     }
 }

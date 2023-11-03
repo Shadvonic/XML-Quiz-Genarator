@@ -44,7 +44,7 @@ namespace QuizApi.Controllers
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
-                    
+
 
                     var choice = await db.QueryFirstOrDefaultAsync<Choice>("SELECT * FROM Choices WHERE Id = @Id", new { Id = id });
                     if (choice == null)
@@ -67,15 +67,18 @@ namespace QuizApi.Controllers
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
+                    Guid questionId = Guid.NewGuid();
+
                     foreach (var choice in choices)
                     {
                         // Generate a new unique Guid for each choice
                         choice.Id = Guid.NewGuid();
+                        choice.QuestionId = questionId;
 
-                        var query = @"INSERT INTO Choices (ChoiceText, QuestionId) VALUES (@ChoiceText, @QuestionId)";
+                        var query = @"INSERT INTO Choices (Id, ChoiceText, QuestionId) VALUES (@Id, @ChoiceText, @QuestionId)";
                         await db.ExecuteAsync(query, choice);
                     }
-                    
+
                     return Ok(choices);
                 }
             }

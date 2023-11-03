@@ -72,10 +72,11 @@ namespace QuizApi.Controllers
         {
             try
             {
+                quiz.Id = Guid.NewGuid();
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
-                    var query = "INSERT INTO Quizzes (QuizName) VALUES (@QuizName)";
-                    await db.ExecuteAsync(query, new { quiz.QuizName });
+                    var query = "INSERT INTO Quizzes (Id, QuizName) VALUES (@Id, @QuizName)";
+                    await db.ExecuteAsync(query, new { Id = quiz.Id, quiz.QuizName });
                     return Ok();
                 }
             }
@@ -85,6 +86,7 @@ namespace QuizApi.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
     }
 
 

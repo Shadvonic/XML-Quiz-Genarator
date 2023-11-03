@@ -23,6 +23,7 @@ namespace QuizApi.Controllers
         {
             try
             {
+                
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
                     var questions = await db.QueryAsync<Question>("SELECT * FROM Questions");
@@ -64,16 +65,18 @@ namespace QuizApi.Controllers
             {
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
-                    foreach(var question in questions)
+                    Guid quizID = Guid.NewGuid();
+                    foreach (var question in questions)
                     {
                         question.Id = Guid.NewGuid();
+                        question.QuizId = quizID;
 
 
-                        var query = @"INSERT INTO Questions (QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation)
-                              VALUES (@QuizId, @QuestionText, @CorrectChoiceIndex, @CorrectExplanation, @IncorrectExplanation)";
+                        var query = @"INSERT INTO Questions (Id, QuizId, QuestionText, CorrectChoiceIndex, CorrectExplanation, IncorrectExplanation)
+                              VALUES (@Id, @QuizId, @QuestionText, @CorrectChoiceIndex, @CorrectExplanation, @IncorrectExplanation)";
                         await db.ExecuteAsync(query, question);
                     }
-                    
+
                     return Ok();
                 }
             }
