@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "Hash": "o/Bb24cCGazuqlJCJS5htCwwgyc7UyVDxaHOnRkOmE4=",
+  "Source": "QuizApi",
+  "BasePath": "_content/QuizApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "QuizApi\\wwwroot",
+      "Source": "QuizApi",
+      "ContentRoot": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.4 asof 2023-11-06-0801\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "BasePath": "_content/QuizApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.4 asof 2023-11-06-0801\\QuizApiApp\\QuizApi\\wwwroot\\css\\site.css",
+      "SourceId": "QuizApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.4 asof 2023-11-06-0801\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "BasePath": "_content/QuizApi",
+      "RelativePath": "css/site.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\site.css"
+    },
+    {
+      "Identity": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.4 asof 2023-11-06-0801\\QuizApiApp\\QuizApi\\wwwroot\\index.html",
+      "SourceId": "QuizApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.4 asof 2023-11-06-0801\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "BasePath": "_content/QuizApi",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.4 asof 2023-11-06-0801\\QuizApiApp\\QuizApi\\wwwroot\\site.js",
+      "SourceId": "QuizApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "H:\\Quiz-XML-Generator\\Quiz XML Generator 0.1.4 asof 2023-11-06-0801\\QuizApiApp\\QuizApi\\wwwroot\\",
+      "BasePath": "_content/QuizApi",
+      "RelativePath": "site.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\site.js"
+    }
+  ]
+}
