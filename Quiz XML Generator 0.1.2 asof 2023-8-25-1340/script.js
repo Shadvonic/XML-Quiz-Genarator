@@ -292,8 +292,6 @@ function updatePassingQuestions() {
   passingQuestionsInput.value = passingQuestions;
 }
 
-
-
 // Function to update the passing score based on the number of passing questions
 function updateScore() {
   const passingQuestionsInput = document.getElementById("passingQuestions");
@@ -301,13 +299,11 @@ function updateScore() {
   const totalQuestions = numQuestions;
 
   if (!isNaN(passingQuestionsValue) && passingQuestionsValue <= totalQuestions) {
-    const validPassingQuestions = Math.min(totalQuestions, passingQuestionsValue);
-    const score = (validPassingQuestions / totalQuestions) * 100;
-    scoreInput.value = score.toFixed(0);
+    scoreInput.value = passingQuestionsValue;
   } else {
     scoreInput.value = 0;
   }
-  
+
   // Prevent negative passing questions
   if (passingQuestionsInput.value < 0) {
     alert("Number of Questions Needed to Pass cannot be negative.");
