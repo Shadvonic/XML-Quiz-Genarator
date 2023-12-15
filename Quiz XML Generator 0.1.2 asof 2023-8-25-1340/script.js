@@ -379,7 +379,7 @@ function validateInputs() {
   let isValid = true;
 
   for (const field of requiredFields) {
-    if (field.value.trim() === "" || !regex.test(field.value)) {
+    if (field.value.trim() === "" || (!field.classList.contains("pasted") && !regex.test(field.value))) {
       field.classList.add("invalid");
       isValid = false;
     } else {
@@ -765,6 +765,20 @@ passingQuestionsInput.addEventListener("input", () => {
   previewXmlData(); // Recalculate and update XML preview
 });
 
+
+// Event listener for paste event on required fields
+document.addEventListener("paste", function (event) {
+  const targetElement = event.target;
+
+  // Check if the input is in an input field with the required class
+  if (
+    targetElement.tagName === "INPUT" &&
+    targetElement.classList.contains("required-field")
+  ) {
+    // Add a class to indicate that pasting occurred
+    targetElement.classList.add("pasted");
+  }
+});'
 // Event listener for Add Question button
 document.getElementById("addQuestionButton").addEventListener("click", addQuestion);
 
